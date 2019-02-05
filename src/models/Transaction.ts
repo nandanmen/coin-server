@@ -2,11 +2,11 @@ import * as mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 export interface ITransaction extends mongoose.Document {
-  _id: number;
+  _id: mongoose.Types.ObjectId;
   vendor: string;
   amount: number;
   date: Date;
-  user: number;
+  user: mongoose.Types.ObjectId;
 }
 
 export const TransactionSchema = new Schema({

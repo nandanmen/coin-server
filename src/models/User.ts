@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 export interface IUser extends mongoose.Document {
-  _id: number;
+  _id: mongoose.Types.ObjectId;
   username: string;
   password: string;
   name: string;
@@ -12,16 +12,16 @@ export interface IUser extends mongoose.Document {
     goal: number;
     due: string;
   };
-  fixedExpenses: [
+  fixedExpenses?: [
     {
-      _id: number;
+      _id: mongoose.Types.ObjectId;
       name: string;
       amount: number;
       due: Date;
       payable: string;
     }
   ];
-  categories: [
+  categories?: [
     {
       name: string;
       amount: number;

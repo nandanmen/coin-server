@@ -33,14 +33,21 @@ router.get('/', (req, res) => {
 router.post('/register', (req, res) => {
   const user = new User();
   const { username, password, name, income } = req.body;
-  if (!username || !password) {
+  if (!username || !password || !name) {
     return res.json({
       success: false,
-      error: 'You must provide a username and password',
+      error: 'You must provide a username, password and name',
     });
   }
+  user._id = new mongoose.Types.ObjectId();
   user.username = username;
   user.password = password;
+  user.name = name;
+  user.income = income ? income : 0;
+  user.save(err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, id: user.id });
+  });
 });
 
 app.listen(API_PORT, () => console.log(`Listening on port ${API_PORT}`));
