@@ -1,8 +1,36 @@
 import * as mongoose from 'mongoose';
-import { ObjectId } from 'bson';
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
+export interface IUser extends mongoose.Document {
+  _id: number;
+  username: string;
+  password: string;
+  name: string;
+  income?: number;
+  goal?: {
+    funds: number;
+    goal: number;
+    due: string;
+  };
+  fixedExpenses: [
+    {
+      _id: number;
+      name: string;
+      amount: number;
+      due: Date;
+      payable: string;
+    }
+  ];
+  categories: [
+    {
+      name: string;
+      amount: number;
+    }
+  ];
+}
+
+export const UserSchema = new Schema({
+  _id: Schema.Types.ObjectId,
   username: String,
   password: String,
   name: String,
@@ -14,9 +42,10 @@ const UserSchema = new Schema({
   },
   fixedExpenses: [
     {
+      _id: Schema.Types.ObjectId,
       name: String,
       amount: Number,
-      due: String,
+      due: Date,
       payable: String,
     },
   ],
@@ -24,15 +53,8 @@ const UserSchema = new Schema({
     {
       name: String,
       amount: Number,
-      transactions: [
-        {
-          vendor: String,
-          amount: Number,
-          date: String,
-        },
-      ],
     },
   ],
 });
 
-export default mongoose.model('User', UserSchema);
+export default mongoose.model<IUser>('User', UserSchema);

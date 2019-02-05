@@ -2,6 +2,8 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
+import User from './models/User';
+import Transaction from './models/Transaction';
 
 dotenv.config(); // Allows me to use .env variables
 
@@ -26,6 +28,19 @@ app.use('/api', router);
 
 router.get('/', (req, res) => {
   res.json({ message: 'Hello world!' });
+});
+
+router.post('/register', (req, res) => {
+  const user = new User();
+  const { username, password, name, income } = req.body;
+  if (!username || !password) {
+    return res.json({
+      success: false,
+      error: 'You must provide a username and password',
+    });
+  }
+  user.username = username;
+  user.password = password;
 });
 
 app.listen(API_PORT, () => console.log(`Listening on port ${API_PORT}`));
