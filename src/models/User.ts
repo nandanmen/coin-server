@@ -1,8 +1,7 @@
-import * as mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import { Document, Schema, Types, model } from 'mongoose';
 
-export interface IUser extends mongoose.Document {
-  _id: mongoose.Types.ObjectId;
+export interface IUser extends Document {
+  _id: Types.ObjectId;
   username: string;
   password: string;
   name: string;
@@ -14,7 +13,7 @@ export interface IUser extends mongoose.Document {
   };
   fixedExpenses?: [
     {
-      _id: mongoose.Types.ObjectId;
+      _id: Types.ObjectId;
       name: string;
       amount: number;
       due: Date;
@@ -57,4 +56,4 @@ export const UserSchema = new Schema({
   ],
 });
 
-export default mongoose.model<IUser>('User', UserSchema);
+export default model<IUser>('User', UserSchema);

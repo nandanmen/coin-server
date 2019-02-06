@@ -1,12 +1,11 @@
-import * as mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import { Document, Schema, Types, model } from 'mongoose';
 
-export interface ITransaction extends mongoose.Document {
-  _id: mongoose.Types.ObjectId;
+export interface ITransaction extends Document {
+  _id: Types.ObjectId;
   vendor: string;
   amount: number;
   date: Date;
-  user: mongoose.Types.ObjectId;
+  user: Types.ObjectId;
 }
 
 export const TransactionSchema = new Schema({
@@ -17,4 +16,4 @@ export const TransactionSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
-export default mongoose.model<ITransaction>('Transaction', TransactionSchema);
+export default model<ITransaction>('Transaction', TransactionSchema);
