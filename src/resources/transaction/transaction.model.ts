@@ -10,9 +10,9 @@ export interface ITransaction extends Document {
 
 export const TransactionSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  vendor: String,
-  amount: Number,
-  date: Date,
+  vendor: { type: String, required: true },
+  amount: { type: Number, required: true },
+  date: { type: Date, default: Date.now },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
