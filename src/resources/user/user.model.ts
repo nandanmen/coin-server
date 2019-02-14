@@ -1,38 +1,9 @@
-import { Document, Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { IUser } from '../../types';
+import * as bcrypt from 'bcrypt';
 
-export interface IUser extends Document {
-  _id: Types.ObjectId;
-  email: string;
-  username: string;
-  password: string;
-  name: string;
-  income?: number;
-  goal?: {
-    funds: number;
-    goal: number;
-    due: string;
-  };
-  fixedExpenses?: [
-    {
-      _id: Types.ObjectId;
-      name: string;
-      amount: number;
-      due: Date;
-      payable: string;
-    }
-  ];
-  categories?: [
-    {
-      name: string;
-      amount: number;
-    }
-  ];
-}
-
-export const UserSchema = new Schema({
-  _id: Schema.Types.ObjectId,
-  email: { type: String, required: true },
-  username: { type: String, required: true },
+export const userSchema = new Schema({
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   name: { type: String, required: true },
   income: Number,
@@ -58,4 +29,28 @@ export const UserSchema = new Schema({
   ],
 });
 
-export default model<IUser>('User', UserSchema);
+userSchema.pre<IUser>('save', function(next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  bcrypt.hash(this.password, 8, (err, hashed) => {
+    if (err) return next(err);
+
+    this.password = hashed;
+    next();
+  });
+});
+
+userSchema.methods.check = (pass: string) => {
+  const curr = this.password;
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(pass, curr, (err, same) => {
+      if (err) return reject(err);
+
+      return resolve(same);
+    });
+  });
+};
+
+export default model<IUser>('User', userSchema);
