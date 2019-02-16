@@ -11,6 +11,7 @@ beforeEach(done => {
   if (mongoose.connection.readyState === 0) {
     mongoose.connect(
       `mongodb://localhost:27017/${process.env.TEST_SUITE}`,
+      { useNewUrlParser: true },
       err => {
         if (err) throw err;
         return clearDb();

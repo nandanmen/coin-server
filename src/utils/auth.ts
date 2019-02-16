@@ -48,14 +48,11 @@ export const login: RequestHandler = async (req, res) => {
       .select('email password')
       .exec();
 
-    console.log(user);
-
     if (!user) {
       return res.status(404).send({ error: 'Incorrect email or password' });
     }
 
     const isValid = await user.check(password);
-    console.log(`Password: ${password}, isValid: ${isValid}`);
     if (!isValid) {
       return res.status(401).send({ error: `Incorrect email or password` });
     }
