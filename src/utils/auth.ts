@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import config from '../config';
 import { RequestHandler } from 'express';
-import { IUser } from '../types';
+import { IUser, CoinRequest } from '../types';
 import User from '../resources/user/user.model';
 
 const { jwtSecret, jwtExp } = config.secrets;
@@ -65,13 +65,25 @@ export const login: RequestHandler = async (req, res) => {
   }
 };
 
-export const protect: RequestHandler = async (req, res, next) => {
+export const protect: RequestHandler = async (req: CoinRequest, res, next) => {
   const error = 'Not authorized';
 
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith('Bearer ')) {
-    res.status(401).send({ error });
+    return res.status(401).send({ error });
   }
 
+  const token = auth.split('Bearer ')[1];
+  let user = await verifyToken(token);
+  user = await User.findById(user.id)
+    .select('-password')
+    .lean()
+    .exec();
+
+  if (!user) {
+    return res.status(401).send({ error });
+  }
+
+  req.user = user;
   next();
 };
