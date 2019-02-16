@@ -42,13 +42,13 @@ userSchema.pre<IUser>('save', function(next) {
   });
 });
 
-userSchema.methods.check = (pass: string) => {
+userSchema.methods.check = function(pass: string) {
   const curr = this.password;
   return new Promise((resolve, reject) => {
     bcrypt.compare(pass, curr, (err, same) => {
       if (err) return reject(err);
 
-      return resolve(same);
+      resolve(same);
     });
   });
 };

@@ -38,4 +38,32 @@ export const register: RequestHandler = async (req, res) => {
   }
 };
 
-export const login: RequestHandler = async (req, res) => {};
+export const login: RequestHandler = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).send({ error: 'Email, and password is required' });
+  }
+  try {
+    const user = await User.findOne({ email })
+      .select('email password')
+      .exec();
+
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).send({ error: 'Incorrect email or password' });
+    }
+
+    const isValid = await user.check(password);
+    console.log(`Password: ${password}, isValid: ${isValid}`);
+    if (!isValid) {
+      return res.status(401).send({ error: `Incorrect email or password` });
+    }
+
+    const token = makeToken(user);
+    res.status(201).send({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error });
+  }
+};

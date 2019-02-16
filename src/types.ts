@@ -26,6 +26,7 @@ export interface IUser extends Document {
       amount: number;
     }
   ];
+  check: (pass: string) => Promise<Boolean>;
 }
 
 export type CoinAuthResponse = {

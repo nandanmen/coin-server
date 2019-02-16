@@ -1,15 +1,12 @@
-import app from '../../server';
 import * as request from 'supertest';
-import { connect, disconnect } from '../db';
-import { register, verifyToken } from '../auth';
+import app from '../../server';
+import { verifyToken } from '../auth';
 import { CoinAuthResponse } from 'types';
 import User from '../../resources/user/user.model';
-import * as jwt from 'jsonwebtoken';
+
+process.env.TEST_SUITE = 'auth-tests';
 
 describe('Authorization:', () => {
-  beforeEach(() => connect());
-  afterEach(done => disconnect(done));
-
   describe('register', () => {
     test('400 with no email/password/name', async () => {
       expect.assertions(2);
@@ -57,18 +54,16 @@ describe('Authorization:', () => {
       expect(res.error).toBe('Email, and password is required');
     });
 
-    test('401 for inexistent user', async () => {
+    test('404 for inexistent user', async () => {
       expect.assertions(2);
 
       const result = await request(app)
         .post('/login')
         .send({ email: 'hello@example.com', password: '1234' });
-      expect(result.status).toBe(401);
+      expect(result.status).toBe(404);
 
       const res: CoinAuthResponse = JSON.parse(result.text);
-      expect(res.error).toBe(
-        'User with email hello@example.com does not exist'
-      );
+      expect(res.error).toBe('Incorrect email or password');
     });
 
     test('401 for incorrect password', async () => {
@@ -86,7 +81,7 @@ describe('Authorization:', () => {
       expect(result.status).toBe(401);
 
       const res: CoinAuthResponse = JSON.parse(result.text);
-      expect(res.error).toBe('Incorrect password');
+      expect(res.error).toBe('Incorrect email or password');
     });
 
     test('returns new token for correct credentials', async () => {
@@ -94,14 +89,14 @@ describe('Authorization:', () => {
 
       const dbUser = await User.create({
         email: 'hello@example.com',
-        password: '1234',
+        password: 'abcd',
         name: 'John Doe',
       });
 
       const result = await request(app)
         .post('/login')
-        .send({ email: 'hello@example.com', password: '1234' });
-      expect(result.status).toBe(200);
+        .send({ email: 'hello@example.com', password: 'abcd' });
+      expect(result.status).toBe(201);
 
       const res: CoinAuthResponse = JSON.parse(result.text);
       let user = await verifyToken(res.token);
