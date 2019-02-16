@@ -43,4 +43,72 @@ describe('Authorization:', () => {
       expect(user.email).toBe(req.email);
     });
   });
+
+  describe('login', () => {
+    test('400 with no email/password', async () => {
+      expect.assertions(2);
+
+      const result = await request(app)
+        .post('/login')
+        .send({});
+      expect(result.status).toBe(400);
+
+      const res: CoinAuthResponse = JSON.parse(result.text);
+      expect(res.error).toBe('Email, and password is required');
+    });
+
+    test('401 for inexistent user', async () => {
+      expect.assertions(2);
+
+      const result = await request(app)
+        .post('/login')
+        .send({ email: 'hello@example.com', password: '1234' });
+      expect(result.status).toBe(401);
+
+      const res: CoinAuthResponse = JSON.parse(result.text);
+      expect(res.error).toBe(
+        'User with email hello@example.com does not exist'
+      );
+    });
+
+    test('401 for incorrect password', async () => {
+      expect.assertions(2);
+
+      await User.create({
+        email: 'hello@example.com',
+        password: '1234',
+        name: 'John Doe',
+      });
+
+      const result = await request(app)
+        .post('/login')
+        .send({ email: 'hello@example.com', password: '5678' });
+      expect(result.status).toBe(401);
+
+      const res: CoinAuthResponse = JSON.parse(result.text);
+      expect(res.error).toBe('Incorrect password');
+    });
+
+    test('returns new token for correct credentials', async () => {
+      expect.assertions(2);
+
+      const dbUser = await User.create({
+        email: 'hello@example.com',
+        password: '1234',
+        name: 'John Doe',
+      });
+
+      const result = await request(app)
+        .post('/login')
+        .send({ email: 'hello@example.com', password: '1234' });
+      expect(result.status).toBe(200);
+
+      const res: CoinAuthResponse = JSON.parse(result.text);
+      let user = await verifyToken(res.token);
+      user = await User.findById(user.id)
+        .lean()
+        .exec();
+      expect(user._id.toHexString()).toBe(dbUser._id.toHexString());
+    });
+  });
 });

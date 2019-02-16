@@ -1,5 +1,5 @@
-import { config } from '../config';
 import * as jwt from 'jsonwebtoken';
+import { config } from '../config';
 import { RequestHandler } from 'express';
 import { IUser } from '../types';
 import User from '../resources/user/user.model';
