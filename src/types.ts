@@ -1,4 +1,5 @@
 import { Document, Types } from 'mongoose';
+import { Request } from 'express';
 
 export interface IUser extends Document {
   _id: Types.ObjectId;
@@ -33,3 +34,7 @@ export type CoinAuthResponse = {
   token?: string;
   error?: string;
 };
+
+export interface CoinRequest extends Request {
+  user?: IUser;
+}

@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { config } from '../config';
+import config from '../config';
 import { RequestHandler } from 'express';
 import { IUser } from '../types';
 import User from '../resources/user/user.model';
@@ -63,4 +63,15 @@ export const login: RequestHandler = async (req, res) => {
     console.error(error);
     res.status(500).send({ error });
   }
+};
+
+export const protect: RequestHandler = async (req, res, next) => {
+  const error = 'Not authorized';
+
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith('Bearer ')) {
+    res.status(401).send({ error });
+  }
+
+  next();
 };
