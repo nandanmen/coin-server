@@ -9,7 +9,7 @@ This server is a simple API that accepts standard CRUD operations. The API is bu
 First clone the repo:
 
 ```
-$ git clone https://github.com/narendrasss/finance-server.git
+$ git clone https://github.com/narendrasss/coin-server.git
 ```
 
 Then install all dependencies:
