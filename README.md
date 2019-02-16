@@ -12,6 +12,12 @@ First clone the repo:
 $ git clone https://github.com/narendrasss/finance-server.git
 ```
 
+Then install all dependencies:
+
+```
+$ npm install
+```
+
 Then start the server with `npm run start` or `yarn start`.
 
 Running `npm run test` or `yarn test` will run the test suites. `npm run dev / yarn dev` will start the development server with nodemon, a utility that watches for changes and automatically restarts the server.
