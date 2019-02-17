@@ -45,6 +45,22 @@ export type CoinModel = Model<
   {}
 >;
 
+export type GetTransactionOptions = {
+  vendor?: string;
+  category?: string;
+  amountRange?: number[];
+  from?: string;
+  to?: string;
+  max?: number;
+};
+
+export type GetTransactionSelector = {
+  vendor?: string;
+  category?: Types.ObjectId;
+  amount?: { $gt?: number; $lt?: number };
+  date?: { $gt?: Date; $lt?: Date };
+};
+
 export type CoinRequestHandler = (
   req: CoinRequest,
   res: CoinResponse,
