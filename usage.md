@@ -6,8 +6,6 @@ All API requests are sent to `/api`.
 
 # User
 
-_Note: this part of the API is not yet implemented_
-
 You can get information about yourself by sending a GET request to `/api/me`. The server will respond with an object of the following form:
 
 ```
@@ -22,6 +20,8 @@ You can get information about yourself by sending a GET request to `/api/me`. Th
     }
 }
 ```
+
+> If you just registered and immediately send a GET to `/api/me`, the income and goal fields will not be in the response because they were not set.
 
 Sending a PUT request to `/api/me` allows you to update any of these fields. If it succeeds, it will respond with the updated object.
 
