@@ -12,21 +12,6 @@ export const userSchema = new Schema({
     goal: Number,
     due: String,
   },
-  fixedExpenses: [
-    {
-      _id: Schema.Types.ObjectId,
-      name: String,
-      amount: Number,
-      due: Date,
-      payable: String,
-    },
-  ],
-  categories: [
-    {
-      name: String,
-      amount: Number,
-    },
-  ],
 });
 
 userSchema.pre<IUser>('save', function(next) {

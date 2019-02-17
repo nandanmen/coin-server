@@ -10,7 +10,8 @@
     "prod": "npm run build && npm run start",
     "test": "jest",
     "test-auth": "./node_modules/.bin/jest src/utils/__tests__/auth.test.ts",
-    "test-crud": "./node_modules/.bin/jest src/utils/__tests__/controllers.test.ts"
+    "test-crud": "./node_modules/.bin/jest src/utils/__tests__/controllers.test.ts",
+    "test-user": "./node_modules/.bin/jest src/resources/user/__tests__/user.test.ts"
   },
   "repository": {
     "type": "git",

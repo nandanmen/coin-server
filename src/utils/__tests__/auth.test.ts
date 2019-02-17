@@ -8,7 +8,7 @@ import { protect } from '../auth';
 
 process.env.TEST_SUITE = 'auth-tests';
 
-describe('Authorization:', () => {
+describe('auth', () => {
   describe('register', () => {
     test('400 with no email/password/name', async () => {
       expect.assertions(2);

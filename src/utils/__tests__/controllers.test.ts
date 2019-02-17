@@ -3,6 +3,8 @@ import { makeID } from '../helpers';
 import Category from '../../resources/category/category.model';
 import { CoinRequest, CoinResponse, IUser, ICategory } from 'types';
 
+process.env.TEST_SUITE = 'controller-tests';
+
 describe('crud controllers', () => {
   describe('get one', () => {
     test('404 if document does not exist', async () => {
