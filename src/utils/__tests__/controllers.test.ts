@@ -88,7 +88,7 @@ describe('crud controllers', () => {
           const data: ICategory[] = msg.data;
           expect(data).toHaveLength(2);
           data.forEach(doc =>
-            expect(doc.createdBy.toHexString()).toEqual(user.toHexString)
+            expect(doc.createdBy.toHexString()).toEqual(user.toHexString())
           );
         },
       } as CoinResponse;
@@ -200,7 +200,7 @@ describe('crud controllers', () => {
         send(msg: any) {
           const data: ICategory = msg.data;
           expect(data._id.toHexString()).toBe(ctg._id.toHexString());
-          expect(data.budget).toBe(ctg.budget);
+          expect(data.budget).toBe(250);
         },
       } as CoinResponse;
 
@@ -255,7 +255,7 @@ describe('crud controllers', () => {
         },
       } as CoinResponse;
 
-      await update(Category)(req, res, () => {});
+      await delOne(Category)(req, res, () => {});
 
       const saved = await Category.findById(ctg._id)
         .lean()
