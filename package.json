@@ -1,5 +1,5 @@
 {
-  "name": "finance-server",
+  "name": "coin-server",
   "version": "1.0.0",
   "description": "The backend server for the coin app.",
   "main": "index.js",
@@ -8,19 +8,21 @@
     "start": "ts-node src/index.ts",
     "dev": "./node_modules/nodemon/bin/nodemon.js",
     "prod": "npm run build && npm run start",
-    "test": "jest"
+    "test": "jest",
+    "test-auth": "./node_modules/.bin/jest src/utils/__tests__/auth.test.ts",
+    "test-crud": "./node_modules/.bin/jest src/utils/__tests__/controllers.test.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/narendrasss/finance-server.git"
+    "url": "git+https://github.com/narendrasss/coin-server.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Narendra Syahrasyad",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/narendrasss/finance-server/issues"
+    "url": "https://github.com/narendrasss/coin-server/issues"
   },
-  "homepage": "https://github.com/narendrasss/finance-server#readme",
+  "homepage": "https://github.com/narendrasss/coin-server#readme",
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/dotenv": "^6.1.0",

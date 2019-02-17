@@ -1,19 +1,12 @@
-import { Document, Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { ITransaction } from 'types';
 
-export interface ITransaction extends Document {
-  _id: Types.ObjectId;
-  vendor: string;
-  amount: number;
-  date: Date;
-  user: Types.ObjectId;
-}
-
-export const TransactionSchema = new Schema({
-  _id: Schema.Types.ObjectId,
+export const transactionSchema = new Schema({
   vendor: { type: String, required: true },
   amount: { type: Number, required: true },
   date: { type: Date, default: Date.now },
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  category: { type: Schema.Types.ObjectId, ref: 'Category' },
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
-export default model<ITransaction>('Transaction', TransactionSchema);
+export default model<ITransaction>('Transaction', transactionSchema);

@@ -43,9 +43,9 @@ userSchema.pre<IUser>('save', function(next) {
 });
 
 userSchema.methods.check = function(pass: string) {
-  const curr = this.password;
+  const hashed: string = this.password;
   return new Promise((resolve, reject) => {
-    bcrypt.compare(pass, curr, (err, same) => {
+    bcrypt.compare(pass, hashed, (err, same) => {
       if (err) return reject(err);
 
       resolve(same);
