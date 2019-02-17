@@ -55,4 +55,31 @@ describe('getSelector', () => {
       new Date('10 Jan 2019').toDateString()
     );
   });
+
+  test('converts options to selector', async () => {
+    const user = makeID();
+    const food = await Category.create({
+      name: 'Food',
+      budget: 300,
+      createdBy: user,
+    });
+
+    const options = {
+      vendor: 'Starbucks',
+      category: 'Food',
+      amountRange: [10, 20],
+      from: '10 Feb 2019',
+      to: '10 April 2019',
+    };
+
+    const selector = await getSelector({ _id: user } as IUser, options);
+    const expectedSelector = {
+      vendor: options.vendor,
+      category: food._id,
+      amount: { $gt: options.amountRange[0], $lt: options.amountRange[1] },
+      date: { $gt: new Date(options.from), $lt: new Date(options.to) },
+    };
+
+    expect(selector).toEqual(expectedSelector);
+  });
 });

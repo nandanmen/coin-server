@@ -2,6 +2,8 @@ import { getMe, updateMe } from '../user.controllers';
 import { IUser, CoinRequest, CoinResponse } from 'types';
 import User from '../user.model';
 
+process.env.TEST_SUITE = 'user-tests';
+
 describe('user', () => {
   describe('get', () => {
     test('returns self', async () => {

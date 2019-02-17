@@ -9,7 +9,9 @@ export const getSelector = async (
   options: GetTransactionOptions
 ) => {
   const { vendor, category, amountRange, from, to } = options;
-  let result: GetTransactionSelector = { vendor };
+  let result: GetTransactionSelector = {};
+
+  if (vendor) result.vendor = vendor;
 
   if (category) {
     const ctg = await Category.findOne({ name: category, createdBy: user._id });
