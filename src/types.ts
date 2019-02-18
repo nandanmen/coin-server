@@ -57,8 +57,8 @@ export type GetTransactionOptions = {
 export type GetTransactionSelector = {
   vendor?: string;
   category?: Types.ObjectId;
-  amount?: { $gt?: number; $lt?: number };
-  date?: { $gt?: Date; $lt?: Date };
+  amount?: { $gte?: number; $lte?: number };
+  date?: { $gte?: Date; $lte?: Date };
 };
 
 export type CoinRequestHandler = (

@@ -25,7 +25,7 @@ describe('getSelector', () => {
     });
 
     const savedRange = selector.amount;
-    expect(savedRange.$lt).toBe(100);
+    expect(savedRange.$lte).toBe(100);
     expect(savedRange).not.toHaveProperty('$gt');
   });
 
@@ -36,8 +36,8 @@ describe('getSelector', () => {
     });
 
     const savedRange = selector.amount;
-    expect(savedRange.$lt).toBe(300);
-    expect(savedRange.$gt).toBe(100);
+    expect(savedRange.$lte).toBe(300);
+    expect(savedRange.$gte).toBe(100);
   });
 
   test('converts date range', async () => {
@@ -48,10 +48,10 @@ describe('getSelector', () => {
     });
 
     const savedRange = selector.date;
-    expect(savedRange.$lt.toDateString()).toEqual(
+    expect(savedRange.$lte.toDateString()).toEqual(
       new Date('10 Feb 2019').toDateString()
     );
-    expect(savedRange.$gt.toDateString()).toEqual(
+    expect(savedRange.$gte.toDateString()).toEqual(
       new Date('10 Jan 2019').toDateString()
     );
   });
@@ -76,8 +76,8 @@ describe('getSelector', () => {
     const expectedSelector = {
       vendor: options.vendor,
       category: food._id,
-      amount: { $gt: options.amountRange[0], $lt: options.amountRange[1] },
-      date: { $gt: new Date(options.from), $lt: new Date(options.to) },
+      amount: { $gte: options.amountRange[0], $lte: options.amountRange[1] },
+      date: { $gte: new Date(options.from), $lte: new Date(options.to) },
     };
 
     expect(selector).toEqual(expectedSelector);

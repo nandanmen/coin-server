@@ -65,8 +65,6 @@ Fixed expenses follow the same conventions as Category except the route is `/api
 
 # Transactions
 
-_Note: this part of the API is not yet implemented_
-
 For Transactions, POST, PUT, DELETE and GET by ID requests follow the same convention as above. The route for transactions is `/api/tr`. The returned Transaction object looks like follows:
 
 ```

@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import * as Moment from 'moment';
 import { GetTransactionOptions, IUser, GetTransactionSelector } from 'types';
 import Category from '../resources/category/category.model';
 
@@ -22,14 +23,14 @@ export const getSelector = async (
     const min = amountRange[0];
     const max = amountRange[1];
     if (!max) {
-      result.amount = { $lt: min };
+      result.amount = { $lte: min };
     } else {
-      result.amount = { $gt: min, $lt: max };
+      result.amount = { $gte: min, $lte: max };
     }
   }
 
-  if (from) result.date = { $gt: new Date(from) };
-  if (to) result.date.$lt = new Date(to);
+  if (from) result.date = { $gte: Moment(from).toDate() };
+  if (to) result.date.$lte = Moment(to).toDate();
 
   return result;
 };

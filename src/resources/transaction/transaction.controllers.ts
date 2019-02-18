@@ -12,7 +12,10 @@ export const getMany: CoinRequestHandler = async (req, res) => {
     const selector = await getSelector(user, options);
     const { max } = options;
 
-    const query = Transaction.find({ createdBy: user._id, ...selector });
+    const query = Transaction.find({
+      createdBy: user._id,
+      ...selector,
+    });
     if (max) query.limit(max);
 
     const docs: ITransaction[] = await query.lean().exec();
