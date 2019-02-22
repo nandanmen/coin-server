@@ -1,5 +1,7 @@
 import * as express from 'express';
 import * as dotenv from 'dotenv';
+import * as cors from 'cors';
+import * as morgan from 'morgan';
 import { json, urlencoded } from 'body-parser';
 import { register, login, protect } from './utils/auth';
 import categoryRouter from './resources/category/category.router';
@@ -11,8 +13,10 @@ dotenv.config(); // Allows me to use .env variables
 
 const app = express();
 
-app.use(urlencoded({ extended: false }));
+app.use(cors());
 app.use(json());
+app.use(urlencoded({ extended: false }));
+app.use(morgan('dev'));
 
 app.use('/register', register);
 app.use('/login', login);

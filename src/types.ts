@@ -10,6 +10,7 @@ export interface IUser extends Document {
   goal?: {
     funds: number;
     goal: number;
+    payment: number;
     due: string;
   };
   check: (pass: string) => Promise<Boolean>;

@@ -10,6 +10,7 @@ export const userSchema = new Schema({
   goal: {
     funds: Number,
     goal: Number,
+    payment: Number,
     due: String,
   },
 });
