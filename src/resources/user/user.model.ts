@@ -8,6 +8,7 @@ export const userSchema = new Schema({
   name: { type: String, required: true },
   income: Number,
   goal: {
+    name: String,
     funds: Number,
     goal: Number,
     payment: Number,
