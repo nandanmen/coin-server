@@ -23,7 +23,13 @@ export const verifyToken = (token: string) => {
 
 export const register: RequestHandler = async (req, res) => {
   const { email, password, name } = req.body;
+
   if (!email || !password || !name) {
+    if (email) {
+      const user = await User.find({ email });
+      if (user) return res.status(400).send({ error: 'That email was taken.' });
+      return res.status(200).end();
+    }
     return res
       .status(400)
       .send({ error: 'Email, password, and name is required' });
