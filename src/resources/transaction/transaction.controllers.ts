@@ -1,4 +1,5 @@
 import Transaction from './transaction.model';
+import Category from '../category/category.model';
 import { CoinRequestHandler, GetTransactionOptions, ITransaction } from 'types';
 import { getSelector } from '../../utils/helpers';
 import makeControllers from '../../utils/controllers';
@@ -28,6 +29,39 @@ export const getMany: CoinRequestHandler = async (req, res) => {
   }
 };
 
+const create: CoinRequestHandler = async (req, res) => {
+  try {
+    const { vendor, amount, date, category } = req.body;
+
+    if (!vendor || !amount || !category) {
+      return res
+        .status(400)
+        .send({ error: 'Vendor, amount and category fields are required' });
+    }
+    let ctg = await Category.findOne({ name: category });
+    if (!ctg) {
+      return res
+        .status(400)
+        .send({ error: `Category ${category} does not exist` });
+    }
+
+    const fields = {
+      vendor,
+      amount,
+      date,
+      category: ctg._id,
+      createdBy: req.user._id,
+    };
+
+    const tr = await Transaction.create(fields);
+    res.status(201).send({ data: tr });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).send({ error });
+  }
+};
+
 controllers.getMany = getMany;
+controllers.create = create;
 
 export default controllers;
