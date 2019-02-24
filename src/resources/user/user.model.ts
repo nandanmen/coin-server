@@ -8,9 +8,9 @@ export const userSchema = new Schema({
   name: { type: String, required: true },
   income: Number,
   goal: {
-    name: String,
-    funds: Number,
-    goal: Number,
+    goal: String,
+    funds: { type: Number, default: 0 },
+    amount: Number,
     payment: Number,
     due: String,
   },

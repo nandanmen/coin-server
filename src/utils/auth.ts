@@ -1,4 +1,5 @@
 import * as jwt from 'jsonwebtoken';
+import moment from 'moment';
 import config from '../config';
 import { RequestHandler } from 'express';
 import { IUser, CoinRequest } from '../types';
@@ -22,7 +23,14 @@ export const verifyToken = (token: string) => {
 };
 
 export const register: RequestHandler = async (req, res) => {
-  const { email, password, name } = req.body;
+  const goalDefault = {
+    goal: '',
+    funds: 0,
+    amount: 0,
+    payment: 0,
+    due: moment().toString(),
+  };
+  const { email, password, name, income = 0, goal = goalDefault } = req.body;
 
   if (!email || !password || !name) {
     if (email) {
@@ -35,7 +43,7 @@ export const register: RequestHandler = async (req, res) => {
       .send({ error: 'Email, password, and name is required' });
   }
   try {
-    const user = await User.create({ email, password, name });
+    const user = await User.create({ email, password, name, income, goal });
     const token = makeToken(user);
     return res.status(201).send({ token });
   } catch (error) {

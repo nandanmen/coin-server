@@ -8,7 +8,7 @@ const controllers = makeControllers(Transaction);
 export const getMany: CoinRequestHandler = async (req, res) => {
   try {
     const user = req.user;
-    const options: GetTransactionOptions = req.body;
+    const options: GetTransactionOptions = req.query;
     const selector = await getSelector(user, options);
     const { max } = options;
 

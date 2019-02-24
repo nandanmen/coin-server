@@ -8,9 +8,9 @@ export interface IUser extends Document {
   name: string;
   income?: number;
   goal?: {
-    name: string;
+    goal: string;
     funds: number;
-    goal: number;
+    amount: number;
     payment: number;
     due: string;
   };
