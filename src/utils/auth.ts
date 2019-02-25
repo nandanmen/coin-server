@@ -32,7 +32,7 @@ export const register: RequestHandler = async (req, res) => {
 
   if (!email || !password || !name) {
     if (email) {
-      const user = await User.find({ email });
+      const user = await User.findOne({ email });
       if (user)
         return res.status(400).send({ error: 'Oops, that email was taken.' });
       return res.status(200).end();

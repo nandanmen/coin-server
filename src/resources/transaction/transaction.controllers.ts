@@ -4,7 +4,7 @@ import { CoinRequestHandler, GetTransactionOptions, ITransaction } from 'types';
 import { getSelector } from '../../utils/helpers';
 import makeControllers from '../../utils/controllers';
 
-const controllers = makeControllers(Transaction);
+const controllers: any = makeControllers(Transaction);
 
 export const getMany: CoinRequestHandler = async (req, res) => {
   try {
@@ -61,7 +61,24 @@ const create: CoinRequestHandler = async (req, res) => {
   }
 };
 
+const getVendors: CoinRequestHandler = async (req, res) => {
+  try {
+    const trs: ITransaction[] = await Transaction.find({
+      createdBy: req.user._id,
+    })
+      .lean()
+      .exec();
+    const vendors = new Set(trs.map(tr => tr.vendor));
+    const uniqueVendors = Array.from(vendors);
+    res.status(201).send({ data: uniqueVendors });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).send({ error });
+  }
+};
+
 controllers.getMany = getMany;
 controllers.create = create;
+controllers.getVendors = getVendors;
 
 export default controllers;

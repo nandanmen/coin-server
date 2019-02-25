@@ -7,4 +7,6 @@ export const categorySchema = new Schema({
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
+categorySchema.index({ createdBy: 1, name: 1 }, { unique: true });
+
 export default model<ICategory>('Category', categorySchema);

@@ -14,4 +14,6 @@ router
   .put(controllers.update)
   .delete(controllers.delOne);
 
+router.route('/vendors').get(controllers.getVendors);
+
 export default router;
