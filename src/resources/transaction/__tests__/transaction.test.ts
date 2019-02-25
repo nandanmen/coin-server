@@ -50,7 +50,7 @@ describe('transactions', () => {
         0
       );
 
-      const req = { user: { _id: user }, body: {} } as CoinRequest;
+      const req = { user: { _id: user }, query: {} } as CoinRequest;
       const res = {
         status(code: number) {
           expect(code).toBe(200);
@@ -116,7 +116,7 @@ describe('transactions', () => {
 
       const req = {
         user: { _id: user },
-        body: { category },
+        query: { category },
       } as CoinRequest;
       const res = {
         status(code: number) {
@@ -192,7 +192,7 @@ describe('transactions', () => {
 
       const req = {
         user: { _id: user },
-        body: { vendor },
+        query: { vendor },
       } as CoinRequest;
       const res = {
         status(code: number) {
@@ -218,7 +218,8 @@ describe('transactions', () => {
 
     test('gets all transactions in an amount range', async () => {
       const user = makeID();
-      const amountRange = [10, 60];
+      const moreThan = 10;
+      const lessThan = 60;
 
       const food = await Category.create({
         name: 'food',
@@ -261,14 +262,12 @@ describe('transactions', () => {
         },
       ]);
       const total = transactions
-        .filter(
-          tr => tr.amount >= amountRange[0] && tr.amount <= amountRange[1]
-        )
+        .filter(tr => tr.amount >= moreThan && tr.amount <= lessThan)
         .reduce((acc, tr) => acc + tr.amount, 0);
 
       const req = {
         user: { _id: user },
-        body: { amountRange },
+        query: { moreThan, lessThan },
       } as CoinRequest;
       const res = {
         status(code: number) {
@@ -281,8 +280,8 @@ describe('transactions', () => {
 
           const data: ITransaction[] = msg.data;
           data.forEach(transaction => {
-            expect(transaction.amount).toBeGreaterThanOrEqual(amountRange[0]);
-            expect(transaction.amount).toBeLessThanOrEqual(amountRange[1]);
+            expect(transaction.amount).toBeGreaterThanOrEqual(moreThan);
+            expect(transaction.amount).toBeLessThanOrEqual(lessThan);
             expect(transaction.createdBy.toHexString()).toEqual(
               user.toHexString()
             );
@@ -295,7 +294,7 @@ describe('transactions', () => {
 
     test('gets all transactions in a date range', async () => {
       const user = makeID();
-      const options = { from: '2019-02-15', to: '2019-02-16' };
+      const options = { after: '2019-02-15', before: '2019-02-16' };
 
       const food = await Category.create({
         name: 'food',
@@ -340,13 +339,13 @@ describe('transactions', () => {
       const total = transactions
         .filter(tr => {
           const date = Moment(tr.date);
-          return date.isBetween(options.from, options.to, null, '[]');
+          return date.isBetween(options.after, options.before, null, '[]');
         })
         .reduce((acc, tr) => acc + tr.amount, 0);
 
       const req = {
         user: { _id: user },
-        body: { ...options },
+        query: { ...options },
       } as CoinRequest;
       const res = {
         status(code: number) {
@@ -361,7 +360,7 @@ describe('transactions', () => {
           data.forEach(tr => {
             const date = Moment(tr.date);
             expect(
-              date.isBetween(options.from, options.to, null, '[]')
+              date.isBetween(options.after, options.before, null, '[]')
             ).toBeTruthy();
             expect(tr.createdBy.toHexString()).toEqual(user.toHexString());
           });
