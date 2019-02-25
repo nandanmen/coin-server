@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import * as Moment from 'moment';
+import moment from 'moment';
 import { GetTransactionOptions, IUser, GetTransactionSelector } from 'types';
 import Category from '../resources/category/category.model';
 
@@ -9,7 +9,7 @@ export const getSelector = async (
   user: IUser,
   options: GetTransactionOptions
 ) => {
-  const { vendor, category, amountRange, from, to } = options;
+  const { vendor, category, moreThan, lessThan, after, before } = options;
   let result: GetTransactionSelector = {};
 
   if (vendor) result.vendor = vendor;
@@ -19,18 +19,11 @@ export const getSelector = async (
     if (ctg) result.category = ctg._id;
   }
 
-  if (amountRange) {
-    const min = amountRange[0];
-    const max = amountRange[1];
-    if (!max) {
-      result.amount = { $lte: min };
-    } else {
-      result.amount = { $gte: min, $lte: max };
-    }
-  }
+  if (moreThan) result.amount.$gte = moreThan;
+  if (lessThan) result.amount.$lte = lessThan;
 
-  if (from) result.date = { $gte: Moment(from).toDate() };
-  if (to) result.date.$lte = Moment(to).toDate();
+  if (after) result.date.$gte = moment(after).toDate();
+  if (before) result.date.$lte = moment(before).toDate();
 
   return result;
 };

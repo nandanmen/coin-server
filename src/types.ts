@@ -50,9 +50,10 @@ export type CoinModel = Model<
 export type GetTransactionOptions = {
   vendor?: string;
   category?: string;
-  amountRange?: number[];
-  from?: string;
-  to?: string;
+  moreThan?: number;
+  lessThan?: number;
+  after?: string;
+  before?: string;
   max?: number;
 };
 
