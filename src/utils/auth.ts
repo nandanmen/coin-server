@@ -33,8 +33,7 @@ export const register: RequestHandler = async (req, res) => {
   if (!email || !password || !name) {
     if (email) {
       const user = await User.findOne({ email });
-      if (user)
-        return res.status(400).send({ error: 'Oops, that email was taken.' });
+      if (user) return res.status(400).send({ error: 'That email was taken.' });
       return res.status(200).end();
     }
     return res
@@ -90,16 +89,21 @@ export const protect: RequestHandler = async (req: CoinRequest, res, next) => {
   }
 
   const token = auth.split('Bearer ')[1];
-  let user = await verifyToken(token);
-  user = await User.findById(user.id)
-    .select('-password')
-    .lean()
-    .exec();
+  try {
+    let user = await verifyToken(token);
+    user = await User.findById(user.id)
+      .select('-password')
+      .lean()
+      .exec();
 
-  if (!user) {
-    return res.status(401).send({ error });
+    if (!user) {
+      return res.status(401).send({ error });
+    }
+
+    req.user = user;
+    next();
+  } catch (e) {
+    console.error(e);
+    return res.status(400).send({ error: e });
   }
-
-  req.user = user;
-  next();
 };

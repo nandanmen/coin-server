@@ -7,6 +7,7 @@ export const userSchema = new Schema({
   password: { type: String, required: true },
   name: { type: String, required: true },
   income: Number,
+  budget: { type: Number, default: 0 },
   goal: {
     goal: String,
     funds: { type: Number, default: 0 },

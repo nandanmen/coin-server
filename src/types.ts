@@ -31,6 +31,7 @@ export interface ICategory extends Document {
   name: string;
   budget: number;
   createdBy: Types.ObjectId;
+  spent?: number;
 }
 
 export interface ITransaction extends Document {
