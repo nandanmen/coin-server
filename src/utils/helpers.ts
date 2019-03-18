@@ -9,7 +9,15 @@ export const getSelector = async (
   user: IUser,
   options: GetTransactionOptions
 ) => {
-  const { vendor, category, moreThan, lessThan, after, before } = options;
+  const {
+    vendor,
+    category,
+    moreThan,
+    lessThan,
+    after,
+    before,
+    period,
+  } = options;
   let result: GetTransactionSelector = {};
 
   if (vendor) result.vendor = vendor;
@@ -25,10 +33,17 @@ export const getSelector = async (
     if (lessThan) result.amount.$lte = lessThan;
   }
 
-  if (after || before) {
+  if (after || before || period) {
     result.date = {};
-    if (after) result.date.$gte = moment(after).toDate();
-    if (before) result.date.$lte = moment(before).toDate();
+    if (period) {
+      const unit: moment.DurationInputArg1 = 1;
+      result.date.$gte = moment()
+        .subtract(unit, period as moment.DurationInputArg2)
+        .toDate();
+    } else {
+      if (after) result.date.$gte = moment(after).toDate();
+      if (before) result.date.$lte = moment(before).toDate();
+    }
   }
 
   return result;

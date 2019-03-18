@@ -11,7 +11,7 @@ export const getMany: CoinRequestHandler = async (req, res) => {
     const user = req.user;
     const options: GetTransactionOptions = req.query;
     const selector = await getSelector(user, options);
-    const { max } = options;
+    const max = Number(options.max);
 
     const query = Transaction.find({
       createdBy: user._id,

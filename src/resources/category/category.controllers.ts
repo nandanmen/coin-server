@@ -5,14 +5,42 @@ import { CoinRequestHandler, ICategory, ITransaction } from 'types';
 
 const controllers = makeControllers(Category);
 
+const getOne: CoinRequestHandler = async (req, res) => {
+  try {
+    const user = req.user;
+    const _id = req.params.id;
+    const ctg = await Category.findOne({ createdBy: user._id, _id })
+      .lean()
+      .exec();
+
+    if (!ctg) {
+      return res.status(404).send({ error: 'Document not found' });
+    }
+
+    const transactions: ITransaction[] = await Transaction.find({
+      category: ctg._id,
+      createdBy: user._id,
+    })
+      .lean()
+      .exec();
+    ctg.spent = transactions.reduce((acc, tr) => acc + tr.amount, 0);
+
+    res.status(200).send({ data: ctg });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).send({ error });
+  }
+};
+
 const getMany: CoinRequestHandler = async (req, res) => {
   try {
     const user = req.user;
     const docs: ICategory[] = await Category.find({ createdBy: user._id })
       .lean()
+      .select('name budget spent')
       .exec();
 
-    docs.map(async ctg => {
+    const promises = docs.map(async ctg => {
       const transactions: ITransaction[] = await Transaction.find({
         category: ctg._id,
         createdBy: user._id,
@@ -22,6 +50,7 @@ const getMany: CoinRequestHandler = async (req, res) => {
       ctg.spent = transactions.reduce((acc, tr) => acc + tr.amount, 0);
     });
 
+    await Promise.all(promises);
     res.status(200).send({ data: docs });
   } catch (error) {
     console.error(error);
@@ -29,27 +58,7 @@ const getMany: CoinRequestHandler = async (req, res) => {
   }
 };
 
-const create: CoinRequestHandler = async (req, res) => {
-  try {
-    const { name, budget } = req.body;
-    if (!name || !budget) throw new Error('Name and budget is required');
-
-    const ctg = await Category.findOne({ name, createdBy: req.user._id });
-    if (ctg) throw new Error('That category already exists');
-
-    const doc = await Category.create({
-      name,
-      budget,
-      createdBy: req.user._id,
-    });
-    res.status(201).send({ data: doc });
-  } catch (error) {
-    console.error(error);
-    return res.status(400).send({ error });
-  }
-};
-
+controllers.getOne = getOne;
 controllers.getMany = getMany;
-controllers.create = create;
 
 export default controllers;

@@ -55,6 +55,7 @@ export type GetTransactionOptions = {
   lessThan?: number;
   after?: string;
   before?: string;
+  period?: string;
   max?: number;
 };
 
